@@ -1,0 +1,15 @@
+spring:
+    application:
+        name: Medora
+
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+        url: jdbc:postgresql://localhost:5432/${DB_NAME}
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+
+        show-sql: true
