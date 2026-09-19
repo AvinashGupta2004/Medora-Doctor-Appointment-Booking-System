@@ -4,8 +4,8 @@ import com.medora.PATIENT.persistence.entity.PatientJpaEntity;
 import com.medora.PATIENT.processing.models.Patient;
 import com.medora.PATIENT.web.DTOs.REQUEST.PatientDeletionRequest;
 import com.medora.PATIENT.web.DTOs.REQUEST.PatientRegistrationRequest;
-import com.medora.PATIENT.web.DTOs.RESPONSES.PatientDeletionResponse;
-import com.medora.PATIENT.web.DTOs.RESPONSES.PatientRegistrationResponse;
+import com.medora.PATIENT.web.DTOs.RESPONSE.PatientDeletionResponse;
+import com.medora.PATIENT.web.DTOs.RESPONSE.PatientRegistrationResponse;
 import org.mapstruct.*;
 
 @Mapper(

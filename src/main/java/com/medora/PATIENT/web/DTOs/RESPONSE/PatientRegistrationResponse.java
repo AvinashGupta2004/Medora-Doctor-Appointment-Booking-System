@@ -1,4 +1,4 @@
-package com.medora.PATIENT.web.DTOs.RESPONSES;
+package com.medora.PATIENT.web.DTOs.RESPONSE;
 
 import com.medora.PATIENT.common.enums.Gender;
 import lombok.AllArgsConstructor;

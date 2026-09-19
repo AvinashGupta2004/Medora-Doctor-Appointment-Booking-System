@@ -1,7 +1,9 @@
 package com.medora.PATIENT.web.controllers;
 
+import com.medora.common.utils.ControllerResponseTemplate;
 import com.medora.PATIENT.web.DTOs.REQUEST.PatientDeletionRequest;
 import com.medora.PATIENT.web.DTOs.REQUEST.PatientRegistrationRequest;
+import com.medora.PATIENT.web.DTOs.RESPONSE.PatientRegistrationResponse;
 import com.medora.PATIENT.web.services.PatientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +24,17 @@ public class PatientController {
     public ResponseEntity<?> registerPatient(
             @Valid @RequestBody PatientRegistrationRequest patientRegistrationRequest
     ) {
+        HttpStatus status = HttpStatus.OK;
+        PatientRegistrationResponse response = patientService.registerNewPatient(patientRegistrationRequest);
+
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(patientService.registerNewPatient(patientRegistrationRequest));
+                .status(status)
+                .body(ControllerResponseTemplate.builder()
+                        .status(status)
+                        .message("Patient registered Successfully!")
+                        .data(response)
+                        .build()
+                );
     }
 
     @DeleteMapping
@@ -32,9 +42,15 @@ public class PatientController {
             @Valid @RequestBody PatientDeletionRequest patientDeletionRequest
     ) {
         patientService.removePatient(patientDeletionRequest);
+        HttpStatus status = HttpStatus.OK;
 
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body("Patient deleted Successfully!");
+                .status(status)
+                .body(ControllerResponseTemplate.builder()
+                        .status(status)
+                        .message("Patient deleted Successfully!")
+                        .data(null)
+                        .build()
+                );
     }
 }
