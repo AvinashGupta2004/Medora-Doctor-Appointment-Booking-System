@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface PatientSearchStrategy {
 
-    Optional<Patient> getPatient(@NotNull Patient patient);
+    Optional<Patient> searchPatient(@NotNull Patient patient);
 }

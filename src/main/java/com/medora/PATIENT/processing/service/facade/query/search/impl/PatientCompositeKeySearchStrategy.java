@@ -13,15 +13,16 @@ import java.util.Optional;
 @Primary
 @Component
 @RequiredArgsConstructor
-public class CompositeKeySearchStrategy implements PatientSearchStrategy{
+public class PatientCompositeKeySearchStrategy implements PatientSearchStrategy{
 
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
 
     @Override
-    public Optional<Patient> getPatient(Patient patient) {
+    public Optional<Patient> searchPatient(Patient patient) {
         return patientRepository
-                .findPatientJpaEntityByContactNumberOrDateOfBirthOrFirstNameOrLastName(
+                .findPatientJpaEntityByPatientRegistrationNumberAndContactNumberOrDateOfBirthOrFirstNameOrLastName(
+                        patient.getPatientRegistrationNumber(),
                         patient.getContactNumber(),
                         patient.getDateOfBirth(),
                         patient.getFirstName(),

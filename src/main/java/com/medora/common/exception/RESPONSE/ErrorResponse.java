@@ -1,4 +1,4 @@
-package com.medora.PATIENT.common.exceptions.RESPONSE;
+package com.medora.common.exception.RESPONSE;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

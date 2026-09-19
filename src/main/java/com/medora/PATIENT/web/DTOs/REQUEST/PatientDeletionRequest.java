@@ -18,6 +18,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PatientDeletionRequest {
 
+    @NotBlank(message = "Patient Registration Number cannot be left Empty!")
+    private String patientRegistrationNumber;
+
     @NotBlank(message = "First Name cannot be left Empty!")
     private String firstName;
     private String lastName;

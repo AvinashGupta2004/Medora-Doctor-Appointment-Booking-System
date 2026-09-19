@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PatientRegistrationResponse {
 
+    private String patientRegistrationNumber;
     private String firstName;
     private String lastName;
     private String contactNumber;

@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
+
 @Component
 @RequiredArgsConstructor
 public class PatientManagementServiceImpl implements PatientManagementService {
@@ -25,6 +27,7 @@ public class PatientManagementServiceImpl implements PatientManagementService {
     public Patient register(Patient patient) {
         if (!patientQueryService.isPatientRegistered(patient)) {
             PatientJpaEntity patientJpaEntity = patientMapper.toEntity(patient);
+            patientJpaEntity.setPatientRegistrationNumber(generatePatientRegistrationNumber());
             patientRepository.save(patientJpaEntity);
             return patientMapper.toModel(patientJpaEntity);
         }
@@ -41,5 +44,15 @@ public class PatientManagementServiceImpl implements PatientManagementService {
         }
         PatientJpaEntity patientJpaEntity = patientMapper.toEntity(registeredPatient);
         patientRepository.delete(patientJpaEntity);
+    }
+
+    private Long generatePatientRegistrationNumber() {
+        Long registrationNumber;
+        Random random = new Random();
+        do {
+            registrationNumber = 10000000000L + random.nextLong(90000000000L);
+        }
+        while (patientRepository.existsPatientJpaEntityByPatientRegistrationNumber(registrationNumber));
+        return registrationNumber;
     }
 }

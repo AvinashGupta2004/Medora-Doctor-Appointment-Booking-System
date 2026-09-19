@@ -1,7 +1,7 @@
-package com.medora.PATIENT.processing.service.facade.management.impl;
+package com.medora.PATIENT.processing.service.facade.query.impl;
 
+import com.medora.PATIENT.common.exceptions.PatientNotRegisteredException;
 import com.medora.PATIENT.common.mappers.PatientMapper;
-import com.medora.PATIENT.persistence.entity.PatientJpaEntity;
 import com.medora.PATIENT.persistence.repository.PatientRepository;
 import com.medora.PATIENT.processing.models.Patient;
 import com.medora.PATIENT.processing.service.facade.query.PatientQueryService;
@@ -23,12 +23,14 @@ public class PatientQueryServiceImpl implements PatientQueryService {
 
     @Override
     public boolean isPatientRegistered(Patient patient) {
-        return patientSearchStrategy.getPatient(patient).isPresent();
+        return patientSearchStrategy.searchPatient(patient).isPresent();
     }
 
     public Patient getPatient(Patient patient) {
-        return patientSearchStrategy
-                .getPatient(patient)
-                .orElse(null);
+        Optional<Patient> optionalPatient = patientSearchStrategy.searchPatient(patient);
+        if (optionalPatient.isEmpty())
+            throw new PatientNotRegisteredException("No patient registered with provided details!");
+
+        return optionalPatient.get();
     }
 }

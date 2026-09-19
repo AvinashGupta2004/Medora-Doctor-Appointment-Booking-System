@@ -1,6 +1,7 @@
 package com.medora.PATIENT.web.DTOs.REQUEST;
 
 import com.medora.PATIENT.common.enums.Gender;
+import com.medora.PATIENT.common.mappers.PatientMapper;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

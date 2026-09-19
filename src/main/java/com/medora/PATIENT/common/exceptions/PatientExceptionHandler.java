@@ -1,6 +1,6 @@
 package com.medora.PATIENT.common.exceptions;
 
-import com.medora.PATIENT.common.exceptions.RESPONSE.ErrorResponse;
+import com.medora.common.exception.RESPONSE.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

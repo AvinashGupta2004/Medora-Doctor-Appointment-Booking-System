@@ -14,6 +14,7 @@ import java.time.LocalDate;
 public class Patient {
 
     private Long id;
+    private Long patientRegistrationNumber;
     private String firstName;
     private String lastName;
     private String contactNumber;

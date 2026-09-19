@@ -21,8 +21,12 @@ import java.time.LocalDateTime;
         },
         indexes = {
                 @Index(
-                        name = "idx_contact_dob_fname_lname",
-                        columnList = "contact_number, date_of_birth, first_name, last_name"
+                        name = "idx_patient_reg_number",
+                        columnList = "patient_reg_number"
+                ),
+                @Index(
+                        name = "idx_reg_number_contact_dob_fname_lname",
+                        columnList = "patient_reg_number, contact_number, date_of_birth, first_name, last_name"
                 )
         }
 )
@@ -31,6 +35,13 @@ public class PatientJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(
+            name = "patient_reg_number",
+            nullable = false,
+            unique = true
+    )
+    private Long patientRegistrationNumber;
 
     @Column(
             name = "first_name",

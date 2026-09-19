@@ -1,6 +1,7 @@
 package com.medora.PATIENT.web.DTOs.RESPONSE;
 
 import com.medora.PATIENT.common.enums.Gender;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PatientDeletionResponse {
 
+    private String patientRegistrationNumber;
     private String firstName;
     private String lastName;
     private String contactNumber;

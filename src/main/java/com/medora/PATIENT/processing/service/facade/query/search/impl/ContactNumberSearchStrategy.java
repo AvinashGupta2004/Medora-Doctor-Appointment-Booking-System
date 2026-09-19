@@ -19,7 +19,7 @@ public class ContactNumberSearchStrategy implements PatientSearchStrategy {
     private final PatientMapper patientMapper;
 
     @Override
-    public Optional<Patient> getPatient(@NotNull Patient patient) {
+    public Optional<Patient> searchPatient(@NotNull Patient patient) {
         Optional<PatientJpaEntity> optionalPatient = patientRepository
                 .findByContactNumber(patient.getContactNumber());
 
