@@ -23,4 +23,9 @@ public class DoctorServiceFacadeImpl implements DoctorServiceFacade {
     public void removeDoctor(Doctor doctor) {
         doctorManagementService.remove(doctor);
     }
+
+    @Override
+    public Doctor getDoctor(Doctor doctor) {
+        return doctorQueryService.getDoctor(doctor, false);
+    }
 }

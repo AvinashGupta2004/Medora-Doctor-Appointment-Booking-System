@@ -36,7 +36,7 @@ public class DoctorManagementServiceImpl implements DoctorManagementService {
 
     @Override
     public void remove(Doctor doctor) {
-        Doctor registeredDoctor = doctorQueryService.getDoctor(doctor);
+        Doctor registeredDoctor = doctorQueryService.getDoctor(doctor, false);
         if (registeredDoctor == null) {
             throw new DoctorNotRegisteredException("Doctor not registered!");
         }

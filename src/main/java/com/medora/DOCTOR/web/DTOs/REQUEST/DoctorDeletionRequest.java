@@ -1,5 +1,6 @@
 package com.medora.DOCTOR.web.DTOs.REQUEST;
 
+import com.medora.common.models.ContactInformation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,10 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DoctorDeletionRequest {
 
-    private String doctorRegistrationNumber;
-    private String firstName;
-    private String lastName;
-    private String medicalLicenseNumber;
+    private ContactInformation contactInformation;
     private String specialization;
     private String location;
 }

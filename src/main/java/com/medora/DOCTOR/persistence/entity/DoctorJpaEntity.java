@@ -1,5 +1,6 @@
 package com.medora.DOCTOR.persistence.entity;
 
+import com.medora.common.models.ContactInformation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -17,13 +20,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(
         name = "com.medora.doctors",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_medical_license", columnNames = {"medical_license_number"})
-        },
         indexes = {
+               @Index(
+                       name = "idx_medical_reg_number_primary_mobile_number_primary_email_addr",
+                       columnList = "medical_reg_number, primary_mobile_number, primary_email_addr"
+               ),
                 @Index(
-                        name = "idx_reg_number_license_specialization_location_fname_lname",
-                        columnList = "doctor_reg_number, medical_license_number, specialization, location, first_name, last_name"
+                        name = "idx_doctor_reg_number",
+                        columnList = "doctor_reg_number"
                 )
         }
 )
@@ -33,43 +37,24 @@ public class DoctorJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(
-            name = "first_name",
-            nullable = false
-    )
-    private String firstName;
-
-    @Column(
-            name = "last_name",
-            nullable = false
-    )
-    private String lastName;
-
-    @Column(
-            name = "doctor_reg_number",
-            nullable = false,
-            unique = true
-    )
+    @Column(name = "doctor_reg_number", nullable = false, unique = true)
     private Long doctorRegistrationNumber;
 
-    @Column(
-            name = "medical_license_number",
-            nullable = false,
-            length = 50
-    )
-    private String medicalLicenseNumber;
+    @Column(name = "medical_reg_number", nullable = false, length = 50)
+    private String medicalRegistrationNumber;
 
-    @Column(
-            name = "specialization",
-            nullable = false
-    )
+    @Embedded
+    private ContactInformation contactInformation;
+
+    @Column(name = "specialization", nullable = false)
     private String specialization;
 
-    @Column(
-            name = "location",
-            nullable = false
-    )
+    @Column(name = "location", nullable = false)
     private String location;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "doctor")
+    @Builder.Default
+    private List<DoctorScheduleJpaEntity> doctorSchedules = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;

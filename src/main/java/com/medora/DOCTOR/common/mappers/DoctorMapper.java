@@ -10,6 +10,7 @@ import org.mapstruct.*;
 
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING,
+        uses = {ContactInformationMapper.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
 )
 public interface DoctorMapper {
@@ -24,13 +25,18 @@ public interface DoctorMapper {
     void updateEntityFromModel(Doctor doctor, @MappingTarget DoctorJpaEntity entity);
 
     DoctorRegistrationResponse mapModelToRegistrationResponse(Doctor doctor);
+
+    @Mapping(target = "contactInformation", source = "contactInformation")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "doctorRegistrationNumber", ignore = true)
+    @Mapping(target = "doctorSchedules", ignore = true)
     Doctor mapRegistrationRequestToModel(DoctorRegistrationRequest doctorRegistrationRequest);
 
     DoctorDeletionResponse mapModelToDeletionResponse(Doctor doctor);
     Doctor mapDeletionRequestToModel(DoctorDeletionRequest doctorDeletionRequest);
 
 
-    default Long toId(String registrationNumber) {
+    default Long toLong(String registrationNumber) {
         if (registrationNumber == null || registrationNumber.isBlank()) {
             return null;
         }

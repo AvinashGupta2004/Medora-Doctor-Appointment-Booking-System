@@ -35,7 +35,7 @@ public class DoctorScheduleJpaEntity {
     @JoinColumn(
             name = "doctor_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "fk_template_doctor")
+            foreignKey = @ForeignKey(name = "fk_schedule_doctor")
     )
     private DoctorJpaEntity doctor;
 
