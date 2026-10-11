@@ -5,6 +5,8 @@ import com.medora.DOCTOR.processing.models.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,10 @@ public interface DoctorRepository extends JpaRepository<DoctorJpaEntity, Long> {
 
     @Query("SELECT doctor FROM DoctorJpaEntity doctor JOIN FETCH doctor.doctorSchedules WHERE doctor.doctorRegistrationNumber = :doctorRegistrationNumber")
     Optional<DoctorJpaEntity> findDoctorJpaEntityByDoctorRegistrationNumberWithSchedules(Long doctorRegistrationNumber);
+
+    @Query("SELECT DISTINCT doctor FROM DoctorJpaEntity doctor LEFT JOIN FETCH doctor.doctorSchedules")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    List<DoctorJpaEntity> findAllDoctorEntitiesWithSchedules();
 
     boolean existsDoctorJpaEntityByDoctorRegistrationNumber(Long registrationNumber);
 }

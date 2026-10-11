@@ -11,5 +11,5 @@ public interface DoctorServiceFacade {
 
     void removeDoctor(@NotNull Doctor doctor);
 
-    Doctor getDoctor(@NotNull Doctor doctor);
+    Doctor getDoctor(@NotNull Doctor doctor, boolean loadWithSchedule);
 }

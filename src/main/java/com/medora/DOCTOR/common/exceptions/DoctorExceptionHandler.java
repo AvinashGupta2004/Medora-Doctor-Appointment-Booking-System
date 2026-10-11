@@ -12,7 +12,6 @@ public class DoctorExceptionHandler {
     @ExceptionHandler(DoctorAlreadyRegisteredException.class)
     public ResponseEntity<?> handleDoctorAlreadyRegisteredException(DoctorAlreadyRegisteredException e) {
         HttpStatus status = HttpStatus.CONFLICT;
-
         return ResponseEntity
                 .status(status)
                 .body(ErrorResponse.builder()

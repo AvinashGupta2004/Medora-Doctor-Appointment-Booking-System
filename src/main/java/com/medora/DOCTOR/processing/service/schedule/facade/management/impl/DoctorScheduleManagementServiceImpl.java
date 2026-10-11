@@ -62,7 +62,16 @@ public class DoctorScheduleManagementServiceImpl implements DoctorScheduleManage
     }
 
     private List<DoctorSchedule> mergeOverlappingSchedule(List<DoctorSchedule> schedules) {
+        if (schedules == null || schedules.isEmpty())
+            return new ArrayList<>();
+
         List<DoctorSchedule> finalSchedules = new ArrayList<>();
+
+        Comparator<DoctorSchedule> scheduleComparator = Comparator
+                .comparing(DoctorSchedule::getDayOfWeek)
+                .thenComparing(DoctorSchedule::getShiftStartTime);
+
+        schedules.sort(scheduleComparator);
 
         for (DoctorSchedule schedule: schedules) {
 
@@ -77,11 +86,16 @@ public class DoctorScheduleManagementServiceImpl implements DoctorScheduleManage
                     schedule.getShiftStartTime().isBefore(lastMergedSchedule.getShiftEndTime());
 
             if (overlapping) {
-                LocalTime maxEndTime = (schedule.getShiftEndTime().isBefore(lastMergedSchedule.getShiftEndTime())) ? lastMergedSchedule.getShiftEndTime() : schedule.getShiftEndTime();
-                lastMergedSchedule.setShiftEndTime(maxEndTime);
+                if (schedule.getShiftEndTime().isAfter(lastMergedSchedule.getShiftEndTime())) {
+                    lastMergedSchedule.setShiftEndTime(schedule.getShiftEndTime());
+                }
+                // Optionally merge max capacity if needed:
+                lastMergedSchedule.setMaxCapacity(
+                        Math.max(lastMergedSchedule.getMaxCapacity(), schedule.getMaxCapacity())
+                );
             }
             else {
-                finalSchedules.add(lastMergedSchedule);
+                finalSchedules.add(schedule);
             }
         }
 

@@ -25,7 +25,7 @@ public class DoctorServiceFacadeImpl implements DoctorServiceFacade {
     }
 
     @Override
-    public Doctor getDoctor(Doctor doctor) {
-        return doctorQueryService.getDoctor(doctor, false);
+    public Doctor getDoctor(Doctor doctor, boolean loadWithSchedule) {
+        return doctorQueryService.getDoctor(doctor, loadWithSchedule);
     }
 }
