@@ -1,7 +1,12 @@
 package com.medora.QUEUE.web.services;
 
+import com.medora.DOCTOR.common.mappers.DoctorMapper;
 import com.medora.DOCTOR.persistence.entity.DoctorJpaEntity;
+import com.medora.QUEUE.processing.models.DoctorShiftQueue;
 import com.medora.QUEUE.processing.services.DoctorShiftQueueServiceFacade;
+import com.medora.QUEUE.web.DTOs.DoctorShiftQueueAvailabilityRequest;
+import com.medora.QUEUE.web.DTOs.DoctorShiftQueueAvailabilityResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,4 +19,30 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class QueueService {
+
+    private final DoctorMapper doctorMapper;
+    private final DoctorShiftQueueServiceFacade doctorShiftQueueServiceFacade;
+
+    public DoctorShiftQueueAvailabilityResponse checkAvailability(
+            @NonNull DoctorShiftQueueAvailabilityRequest request
+    ) {
+        DoctorShiftQueue shiftQueue = DoctorShiftQueue.builder()
+                .doctorRegistrationNumber(
+                        doctorMapper.toLong(request.doctorRegistrationNumber())
+                )
+                .shiftDate(request.shiftDate())
+                .startTime(request.startTime())
+                .build();
+
+        DoctorShiftQueue fetchedShiftQueue = doctorShiftQueueServiceFacade.checkAvailability(shiftQueue);
+
+        return new DoctorShiftQueueAvailabilityResponse(
+                doctorMapper.toRegistrationNumber(fetchedShiftQueue.getDoctorRegistrationNumber()),
+                fetchedShiftQueue.getShiftDate(),
+                fetchedShiftQueue.getStartTime(),
+                fetchedShiftQueue.getEndTime(),
+                fetchedShiftQueue.getMaxCapacity() - fetchedShiftQueue.getBookedTokens(),
+                fetchedShiftQueue.getStatus()
+        );
+    }
 }

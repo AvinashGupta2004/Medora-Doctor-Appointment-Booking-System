@@ -22,7 +22,7 @@ public class DoctorShiftQueueBatchScheduler {
     private final Job generateShiftQueueJob;
     private final JobOperator jobOperator;
 
-    @Scheduled(cron = "30 * * * * *")
+    @Scheduled(cron = "0 */10 * * * *")
     public void generateShiftQueuesForAllDoctors() {
         log.info("Starting daily doctor shift queue generation job...");
         try {

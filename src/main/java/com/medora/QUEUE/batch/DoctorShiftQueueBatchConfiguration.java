@@ -4,12 +4,10 @@ import com.medora.DOCTOR.persistence.entity.DoctorJpaEntity;
 import com.medora.QUEUE.persistence.entity.DoctorShiftQueueJpaEntity;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.job.parameters.JobParametersBuilder;
-import org.springframework.batch.core.job.parameters.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -22,7 +20,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.util.List;
 
 @Configuration
-@EnableBatchProcessing
 @RequiredArgsConstructor
 public class DoctorShiftQueueBatchConfiguration {
 

@@ -20,6 +20,7 @@ public class DoctorShiftQueue {
 
     private Long id;
     private Long doctorId;
+    private Long doctorRegistrationNumber;
     private Long scheduleId;
     private LocalDate shiftDate;
     private LocalTime startTime;
