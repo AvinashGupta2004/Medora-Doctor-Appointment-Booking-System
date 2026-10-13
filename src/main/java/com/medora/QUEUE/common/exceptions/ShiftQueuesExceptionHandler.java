@@ -24,4 +24,17 @@ public class ShiftQueuesExceptionHandler {
                         .build()
                 );
     }
+
+    @ExceptionHandler(NoQueuesAvailableException.class)
+    public ResponseEntity<?> handleNoQueuesAvailableException(NoQueuesAvailableException e) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        return ResponseEntity
+                .status(status)
+                .body(ControllerResponseTemplate.builder()
+                        .status(status)
+                        .data(null)
+                        .message(e.getMessage())
+                        .build());
+    }
 }
