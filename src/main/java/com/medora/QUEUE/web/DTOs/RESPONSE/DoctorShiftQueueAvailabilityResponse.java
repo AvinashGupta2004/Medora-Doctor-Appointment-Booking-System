@@ -1,4 +1,4 @@
-package com.medora.QUEUE.web.DTOs;
+package com.medora.QUEUE.web.DTOs.RESPONSE;
 
 import com.medora.QUEUE.common.enums.QueueStatus;
 import lombok.NonNull;

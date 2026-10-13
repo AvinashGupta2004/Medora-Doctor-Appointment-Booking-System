@@ -14,6 +14,10 @@ public interface DoctorShiftQueueMapper {
 
     @Mapping(target = "doctorId", source = "doctor.id")
     @Mapping(target = "scheduleId", source = "doctorSchedule.id")
+    @Mapping(
+            target = "doctorRegistrationNumber",
+            source = "doctor.doctorRegistrationNumber"
+    )
     DoctorShiftQueue toModel(DoctorShiftQueueJpaEntity entity);
 
     @Mapping(target = "doctor", source = "doctorId", qualifiedByName = "mapDoctorIdToEntity")

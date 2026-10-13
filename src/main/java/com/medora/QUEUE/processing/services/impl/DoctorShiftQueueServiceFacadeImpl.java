@@ -9,6 +9,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DoctorShiftQueueServiceFacadeImpl implements DoctorShiftQueueServiceFacade {
@@ -17,8 +19,13 @@ public class DoctorShiftQueueServiceFacadeImpl implements DoctorShiftQueueServic
     private final DoctorShiftQueueQueryService doctorShiftQueueQueryService;
 
     @Override
-    public void createShiftQueuesForNDays(@NonNull Doctor doctor, int n) {
-        doctorShiftQueueManagementService.createDoctorShiftQueuesForNDays(doctor, n);
+    public Integer allocateToken(@NonNull DoctorShiftQueue doctorShiftQueue) {
+        return 0;
+    }
+
+    @Override
+    public List<DoctorShiftQueue> getAllShiftQueuesForDate(@NonNull DoctorShiftQueue doctorShiftQueue) {
+        return doctorShiftQueueQueryService.getAllShiftQueuesForDate(doctorShiftQueue);
     }
 
     @Override

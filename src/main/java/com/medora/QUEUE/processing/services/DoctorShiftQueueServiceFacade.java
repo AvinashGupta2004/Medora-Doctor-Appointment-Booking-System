@@ -1,12 +1,17 @@
 package com.medora.QUEUE.processing.services;
 
-import com.medora.DOCTOR.processing.models.Doctor;
 import com.medora.QUEUE.processing.models.DoctorShiftQueue;
-import org.jspecify.annotations.NonNull;
+import lombok.NonNull;
+import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
+
+@Validated
 public interface DoctorShiftQueueServiceFacade {
 
-    void createShiftQueuesForNDays(@NonNull Doctor doctor, int n);
-
     DoctorShiftQueue checkAvailability(@NonNull DoctorShiftQueue doctorShiftQueue);
+
+    Integer allocateToken(@NonNull DoctorShiftQueue doctorShiftQueue);
+
+    List<DoctorShiftQueue> getAllShiftQueuesForDate(@NonNull DoctorShiftQueue doctorShiftQueue);
 }

@@ -1,4 +1,4 @@
-package com.medora.QUEUE.web.DTOs;
+package com.medora.QUEUE.web.DTOs.REQUEST;
 
 import lombok.NonNull;
 import java.time.LocalDate;

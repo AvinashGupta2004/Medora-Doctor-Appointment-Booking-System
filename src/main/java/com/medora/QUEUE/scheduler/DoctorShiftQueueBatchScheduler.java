@@ -26,7 +26,10 @@ public class DoctorShiftQueueBatchScheduler {
     public void generateShiftQueuesForAllDoctors() {
         log.info("Starting daily doctor shift queue generation job...");
         try {
-            JobExecution jobExecution = jobOperator.start(generateShiftQueueJob, generateShiftQueueBatchJobParameters);
+            JobExecution jobExecution = jobOperator.start(
+                    generateShiftQueueJob,
+                    generateShiftQueueBatchJobParameters
+            );
 
             log.info("Daily doctor shift queue batch job launched successfully. Execution ID: {}, Status: {}",
                     jobExecution.getId(), jobExecution.getStatus());

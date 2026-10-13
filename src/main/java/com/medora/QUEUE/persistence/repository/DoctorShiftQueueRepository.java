@@ -39,4 +39,6 @@ public interface DoctorShiftQueueRepository extends JpaRepository<DoctorShiftQue
     );
 
     List<DoctorShiftQueueJpaEntity> findByDoctorIdAndShiftDateBetween(Long doctorId, LocalDate startDate, LocalDate endDate);
+
+    List<DoctorShiftQueueJpaEntity> findByDoctorIdAndShiftDate(Long doctorId, LocalDate shiftDate);
 }
