@@ -1,208 +1,125 @@
-<div align="center">
+# Medora
 
-# 🩺 Medora
+**Concurrency-Safe OPD Appointment & Queue Management System**
 
-**A Modern, Concurrency-Safe OPD Appointment & Queue Management Engine**
+Medora is a backend-focused healthcare application designed to manage doctor shifts, appointment queues, and sequential patient tokens with a strong emphasis on data consistency and concurrent booking operations.
 
-*Optimizing Outpatient Department workflows with shift-based capacities, sequential token generation, and enterprise-grade transaction safety.*
+## Key Features
 
-[![Java](https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
-[![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-Persistence-blue?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-data-jpa)
-</div>
+- **Shift-Based Queue Management** — Organizes appointments around doctor availability and shift capacities.
+- **Sequential Token Generation** — Maintains token ordering for registered patient appointments.
+- **Concurrency Control** — Uses pessimistic database locking to coordinate concurrent booking requests.
+- **Transactional Persistence** — Uses Spring Data JPA and Hibernate to manage database operations.
+- **Layered Architecture** — Separates REST APIs, business logic, domain models, and persistence concerns.
+- **Modular Design** — Organizes functionality into focused packages for maintainability and future extension.
 
----
+## Tech Stack
 
-## 📌 Overview
+| Component         | Technology                                |
+| ----------------- | ----------------------------------------- |
+| Language          | Java                                      |
+| Backend Framework | Spring Boot                               |
+| Persistence       | Spring Data JPA, Hibernate                |
+| Database          | PostgreSQL                                |
+| Concurrency       | Pessimistic Locking (`PESSIMISTIC_WRITE`) |
+| Build Tool        | Maven                                     |
 
-Traditional clinic scheduling often relies on rigid, clock-bound time slots that break down under real-world hospital delays and high patient volume. **Medora** reinvents outpatient department (OPD) management by implementing a **token-driven, shift-capacity model**.
+## Architecture
 
-By replacing rigid scheduling with dynamic shift windows and sequential token issuance, Medora ensures deterministic, fair, and high-concurrency patient flow management while protecting backend data integrity.
-
----
-
-## ✨ Key Features
-
-- **🎟️ Token-Based OPD Queue Engine:** Simplifies patient scheduling by moving away from hard-coded time slots to shift-based capacity and sequential token generation.
-- **🔒 High-Concurrency Protection:** Utilizes **Spring Data JPA with pessimistic locking** at the persistence layer to safely handle concurrent booking spikes and eliminate double-booking bugs.
-- **🏗️ Three-Layer Architecture:** Features a clean separation of concerns:
-    - **Web Layer:** Controllers, DTO request/response models, global exception handlers.
-    - **Processing Layer:** Core domain models, appointment state machines, and triage rules.
-    - **Persistence Layer:** Database entities, JPA repositories, and concurrency configurations.
-- **📦 Package-by-Feature Structure:** Organized into modular, feature-focused packages to reduce coupling and ease long-term maintenance.
-- **🤖 AI-Ready Foundation:** Architected with clean extension hooks to incorporate predictive wait-time forecasting and automated triage algorithms in future releases.
-
----
-
-## 🏛️ Project Architecture
+Medora follows a layered architecture with feature-oriented package organization.
 
 ```text
 com.medora
-├── web           # REST APIs, Request/Response DTOs, Exception Handlers
-├── processing    # Business logic, Appointment State Machines, Queue Triage
-└── persistence   # JPA Entities, Repositories with Pessimistic Locks
+├── DOCTOR
+│   ├── web
+│   ├── processing
+│   └── persistence
+│
+├── QUEUE
+│   ├── web
+│   ├── processing
+│   └── persistence
+│
+└── common
+    ├── exceptions
+    ├── mappers
+    └── shared components
 ```
 
----
+- **Web:** REST controllers, request/response DTOs, and API exception handling.
+- **Processing:** Business rules, queue availability checks, and application services.
+- **Persistence:** JPA entities, repositories, and database access.
 
-## 🛠️ Tech Stack
+## Concurrency Strategy
 
-- **Language:** Java 17+
-- **Framework:** Spring Boot 3.x
-- **ORM / Persistence:** Spring Data JPA / Hibernate
-- **Database:** PostgreSQL / MySQL
-- **Concurrency Strategy:** JPA Pessimistic Read/Write Locks (`PESSIMISTIC_WRITE`)
+Appointment booking requires more than checking whether a queue has available capacity. Concurrent requests must not incorrectly allocate tokens or exceed the configured capacity.
 
----
+Medora uses pessimistic write locking at the persistence layer to coordinate competing operations on shared queue records.
 
-## 🚀 Getting Started
+The intended booking workflow is:
+
+1. Retrieve and lock the relevant queue record.
+2. Validate queue status and remaining capacity.
+3. Allocate the next token and update queue state.
+4. Commit the changes within a transaction.
+
+This approach helps prevent conflicting updates when multiple patients attempt to book simultaneously. Correctness also depends on transaction boundaries, lock scope, and database constraints.
+
+## Getting Started
 
 ### Prerequisites
 
-- JDK 17 or higher
-- Maven or Gradle
-- PostgreSQL or MySQL server instance running locally or hosted
+- JDK version compatible with the project
+- Maven
+- PostgreSQL
+- Git
 
-### Setup & Run
+### 1. Clone the repository
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/your-username/medora.git
-   cd medora
-   ```
-
-2. **Configure Database Connection**
-   Update your database credentials in `src/main/resources/application.yml`:
-   ```yaml
-   spring:
-     datasource:
-       url: jdbc:postgresql://localhost:5432/medora_db
-       username: your_db_user
-       password: your_db_password
-     jpa:
-       hibernate:
-         ddl-auto: update
-       show-sql: true
-   ```
-
-3. **Build and Start Application**
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-
----
-
-## 🗺️ Product Roadmap
-
-- [x] Core Entities (`Patient`, `Doctor`, `Shift`, `Appointment`, `Token`)
-- [x] Shift-based token generation algorithm
-- [x] Concurrency control using pessimistic locking
-- [ ] Swagger / OpenAPI REST API documentation
-- [ ] Machine-learning based queue delay forecasting engine
-
----
-avatar
-Ask In Chat
-Ask In Chat<div align="center">
-
-# 🩺 Medora
-
-**A Modern, Concurrency-Safe OPD Appointment & Queue Management Engine**
-
-*Optimizing Outpatient Department workflows with shift-based capacities, sequential token generation, and enterprise-grade transaction safety.*
-
-[![Java](https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
-[![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-Persistence-blue?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-data-jpa)
-</div>
-
----
-
-## 📌 Overview
-
-Traditional clinic scheduling often relies on rigid, clock-bound time slots that break down under real-world hospital delays and high patient volume. **Medora** reinvents outpatient department (OPD) management by implementing a **token-driven, shift-capacity model**.
-
-By replacing rigid scheduling with dynamic shift windows and sequential token issuance, Medora ensures deterministic, fair, and high-concurrency patient flow management while protecting backend data integrity.
-
----
-
-## ✨ Key Features
-
-- **🎟️ Token-Based OPD Queue Engine:** Simplifies patient scheduling by moving away from hard-coded time slots to shift-based capacity and sequential token generation.
-- **🔒 High-Concurrency Protection:** Utilizes **Spring Data JPA with pessimistic locking** at the persistence layer to safely handle concurrent booking spikes and eliminate double-booking bugs.
-- **🏗️ Three-Layer Architecture:** Features a clean separation of concerns:
-    - **Web Layer:** Controllers, DTO request/response models, global exception handlers.
-    - **Processing Layer:** Core domain models, appointment state machines, and triage rules.
-    - **Persistence Layer:** Database entities, JPA repositories, and concurrency configurations.
-- **📦 Package-by-Feature Structure:** Organized into modular, feature-focused packages to reduce coupling and ease long-term maintenance.
-- **🤖 AI-Ready Foundation:** Architected with clean extension hooks to incorporate predictive wait-time forecasting and automated triage algorithms in future releases.
-
----
-
-## 🏛️ Project Architecture
-
-```text
-com.medora
-├── web           # REST APIs, Request/Response DTOs, Exception Handlers
-├── processing    # Business logic, Appointment State Machines, Queue Triage
-└── persistence   # JPA Entities, Repositories with Pessimistic Locks
+```bash
+git clone https://github.com/<your-username>/medora.git
+cd medora
 ```
 
----
+### 2. Configure the database
 
-## 🛠️ Tech Stack
+Create a PostgreSQL database and configure your connection in `src/main/resources/application.yml`.
 
-- **Language:** Java 17+
-- **Framework:** Spring Boot 3.x
-- **ORM / Persistence:** Spring Data JPA / Hibernate
-- **Database:** PostgreSQL / MySQL
-- **Concurrency Strategy:** JPA Pessimistic Read/Write Locks (`PESSIMISTIC_WRITE`)
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/medora_db
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+```
 
----
+Configure the corresponding environment variables before starting the application. Keep credentials out of version control.
 
-## 🚀 Getting Started
+### 3. Run the application
 
-### Prerequisites
+```bash
+./mvnw spring-boot:run
+```
 
-- JDK 17 or higher
-- Maven or Gradle
-- PostgreSQL or MySQL server instance running locally or hosted
+On Windows:
 
-### Setup & Run
+```powershell
+.\mvnw.cmd spring-boot:run
+```
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/your-username/medora.git
-   cd medora
-   ```
+## Roadmap
 
-2. **Configure Database Connection**
-   Update your database credentials in `src/main/resources/application.yml`:
-   ```yaml
-   spring:
-     datasource:
-       url: jdbc:postgresql://localhost:5432/medora_db
-       username: your_db_user
-       password: your_db_password
-     jpa:
-       hibernate:
-         ddl-auto: update
-       show-sql: true
-   ```
+- [ ] Doctor and queue domain models
+- [ ] Shift-based queue management
+- [ ] Pessimistic locking for concurrent operations
+- [ ] API documentation with OpenAPI / Swagger
+- [ ] Automated concurrency and integration tests
+- [ ] Queue wait-time estimation
 
-3. **Build and Start Application**
-   ```bash
-   ./mvnw spring-boot:run
-   ```
+## Engineering Focus
+
+Medora explores practical backend engineering concerns, including transactional consistency, concurrency control, separation of concerns, domain modeling, and maintainable Spring Boot application design.
 
 ---
 
-## 🗺️ Product Roadmap
-
-- [x] Core Entities (`Patient`, `Doctor`, `Shift`, `Appointment`, `Token`)
-- [x] Shift-based token generation algorithm
-- [x] Concurrency control using pessimistic locking
-- [ ] Swagger / OpenAPI REST API documentation
-- [ ] Machine-learning based queue delay forecasting engine
-
----
+*Built with Java and Spring Boot.*
