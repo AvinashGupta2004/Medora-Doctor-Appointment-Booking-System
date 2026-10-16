@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,11 +38,20 @@ public class DoctorShiftQueueManagementServiceImpl implements DoctorShiftQueueMa
     private final DoctorMapper doctorMapper;
 
     @Override
-    public Integer allocateToken(@NonNull DoctorShiftQueue shiftQueue) {
+    public Integer allocateToken(
+            @NonNull DoctorShiftQueue shiftQueue,
+            @NonNull UUID idempotency_key
+            ) {
         // Work Order:
-        // 1. Check Availability for given details.
-        // 2. If Available, fetch the Doctor Shift Queue Jpa Entity
-        // 3.
+        // 1. Check whether this key was already processed.
+        // 2. If yes, return the previously allocated token. If no, proceed...
+        // 3. Validate the queue and fetch its JPA entity.
+        // 4. Lock the queue row to prevent concurrent overbooking.
+        // 5. Verify that bookings are allowed and capacity remains.
+        // 6. Allocate the next token.
+        // 7. Update queue status if capacity is reached.
+        // 8. Save the idempotency record and queue changes.
+        // 9. Return the allocated token.
         return 0;
     }
 }
