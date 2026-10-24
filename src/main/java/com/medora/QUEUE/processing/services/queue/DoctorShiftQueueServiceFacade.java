@@ -1,4 +1,4 @@
-package com.medora.QUEUE.processing.services;
+package com.medora.QUEUE.processing.services.queue;
 
 import com.medora.QUEUE.processing.models.DoctorShiftQueue;
 import lombok.NonNull;

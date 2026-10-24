@@ -6,5 +6,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class DoctorShiftQueueIdempotencyServiceImpl implements DoctorShiftQueueIdempotencyServiceFacade {
+public class DoctorShiftQueueIdempotencyServiceFacadeImpl implements DoctorShiftQueueIdempotencyServiceFacade {
 }

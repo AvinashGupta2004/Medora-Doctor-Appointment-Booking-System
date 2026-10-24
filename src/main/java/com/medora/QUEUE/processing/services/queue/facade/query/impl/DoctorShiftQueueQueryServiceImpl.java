@@ -1,4 +1,4 @@
-package com.medora.QUEUE.processing.services.facade.query.impl;
+package com.medora.QUEUE.processing.services.queue.facade.query.impl;
 
 import com.medora.DOCTOR.common.mappers.DoctorMapper;
 import com.medora.DOCTOR.processing.models.Doctor;
@@ -10,7 +10,7 @@ import com.medora.QUEUE.common.mappers.DoctorShiftQueueMapper;
 import com.medora.QUEUE.persistence.entity.DoctorShiftQueueJpaEntity;
 import com.medora.QUEUE.persistence.repository.DoctorShiftQueueRepository;
 import com.medora.QUEUE.processing.models.DoctorShiftQueue;
-import com.medora.QUEUE.processing.services.facade.query.DoctorShiftQueueQueryService;
+import com.medora.QUEUE.processing.services.queue.facade.query.DoctorShiftQueueQueryService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

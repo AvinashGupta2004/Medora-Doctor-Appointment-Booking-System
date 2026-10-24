@@ -1,10 +1,6 @@
 package com.medora.QUEUE.processing.models;
 
-import com.medora.APPOINTMENT.common.exceptions.MedoraDomainException;
-import com.medora.DOCTOR.common.enums.ShiftStatus;
 import com.medora.QUEUE.common.enums.QueueStatus;
-import com.medora.QUEUE.common.exceptions.BookingNotAllowedException;
-import com.medora.QUEUE.common.exceptions.MaxBookingsReachedException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -2,7 +2,7 @@ package com.medora.QUEUE.web.services;
 
 import com.medora.DOCTOR.common.mappers.DoctorMapper;
 import com.medora.QUEUE.processing.models.DoctorShiftQueue;
-import com.medora.QUEUE.processing.services.DoctorShiftQueueServiceFacade;
+import com.medora.QUEUE.processing.services.queue.DoctorShiftQueueServiceFacade;
 import com.medora.QUEUE.web.DTOs.REQUEST.DoctorShiftQueueAvailabilityRequest;
 import com.medora.QUEUE.web.DTOs.RESPONSE.DoctorShiftQueueAvailabilityResponse;
 import lombok.NonNull;

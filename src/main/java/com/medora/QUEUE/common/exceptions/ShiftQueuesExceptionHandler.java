@@ -35,4 +35,32 @@ public class ShiftQueuesExceptionHandler {
                         .message(e.getMessage())
                         .build());
     }
+
+    @ExceptionHandler(MaxBookingsReachedException.class)
+    public ResponseEntity<?> handleMaxBookingsReachedException(MaxBookingsReachedException e) {
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        return ResponseEntity
+                .status(status)
+                .body(ControllerResponseTemplate.builder()
+                        .message(e.getMessage())
+                        .data(null)
+                        .status(status)
+                        .build()
+                );
+    }
+
+    @ExceptionHandler(BookingNotAllowedException.class)
+    public ResponseEntity<?> handleBookingNotAllowedException(BookingNotAllowedException e) {
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        return ResponseEntity
+                .status(status)
+                .body(ControllerResponseTemplate.builder()
+                        .message(e.getMessage())
+                        .data(null)
+                        .status(status)
+                        .build()
+                );
+    }
 }

@@ -1,7 +1,6 @@
-package com.medora.QUEUE.processing.services.facade.query;
+package com.medora.QUEUE.processing.services.queue.facade.query;
 
 import com.medora.QUEUE.processing.models.DoctorShiftQueue;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
