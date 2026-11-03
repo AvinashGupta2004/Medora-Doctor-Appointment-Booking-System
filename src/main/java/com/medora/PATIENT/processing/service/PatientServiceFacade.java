@@ -11,4 +11,6 @@ public interface PatientServiceFacade {
 
     Patient registerPatient(@NotNull Patient patient);
     void removePatient(@NotNull Patient patient);
+
+    Patient getPatient(@NotNull Patient patient);
 }

@@ -13,6 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -34,6 +35,12 @@ public class AppointmentJpaEntity {
     )
     @Column(name = "appointment_id", nullable = false, updatable = false)
     private Long id;
+
+    @Column(name = "arn", nullable = false, unique = true)
+    private String appointmentReferenceNumber;
+
+    @Column(name = "idempotency_key", nullable = false, unique = true)
+    private String idempotencyKey;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "queue_id", nullable = false, foreignKey = @ForeignKey(name = "fk_appointment_queue"))

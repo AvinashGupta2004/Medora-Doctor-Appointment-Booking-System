@@ -1,0 +1,36 @@
+package com.medora.PATIENT.processing.service.facade.query.search.strategies.impl;
+
+import com.medora.PATIENT.common.enums.PatientSearchContext;
+import com.medora.PATIENT.common.mappers.PatientMapper;
+import com.medora.PATIENT.persistence.entity.PatientJpaEntity;
+import com.medora.PATIENT.persistence.repository.PatientRepository;
+import com.medora.PATIENT.processing.models.Patient;
+import com.medora.PATIENT.processing.service.facade.query.search.strategies.PatientSearchStrategy;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+
+@Component
+@RequiredArgsConstructor
+public class PRNSearchStrategy implements PatientSearchStrategy {
+
+    private final PatientRepository patientRepository;
+    private final PatientMapper patientMapper;
+
+    @Override
+    public Optional<Patient> searchPatient(@NotNull Patient patient) {
+        Optional<PatientJpaEntity> optionalPatient = patientRepository
+                .findByPatientRegistrationNumber(patient.getPatientRegistrationNumber());
+
+        return optionalPatient.map(patientMapper::toModel);
+    }
+
+    @Override
+    public boolean supports(Patient patient, PatientSearchContext context) {
+        boolean hasRequiredFields = patient.getPatientRegistrationNumber() != null;
+
+        return hasRequiredFields && context.equals(PatientSearchContext.SINGLE_PRN);
+    }
+}

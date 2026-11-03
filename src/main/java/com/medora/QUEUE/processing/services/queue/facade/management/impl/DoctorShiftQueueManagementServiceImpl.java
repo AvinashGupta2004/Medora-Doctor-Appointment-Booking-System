@@ -33,7 +33,6 @@ public class DoctorShiftQueueManagementServiceImpl implements DoctorShiftQueueMa
         // Work Order:
         // 1. Validate the queue and fetch its JPA entity.
         // 2. Lock the queue row to prevent concurrent overbooking.
-        //  After locking the queue, again check for idempotency.
         // 3. Verify that bookings are allowed and capacity remains.
         // 4. Allocate the next token.
         // 5. Update queue status if capacity is reached.
@@ -53,21 +52,23 @@ public class DoctorShiftQueueManagementServiceImpl implements DoctorShiftQueueMa
         if (fetchedEntity.getStatus() != QueueStatus.OPEN)
             throw new BookingNotAllowedException("No more bookings allowed!");
 
-        int bookedTokens = fetchedEntity.getBookedTokens();
+        int totalActiveBookings = fetchedEntity.getTotalActiveBookings();
+        int lastTokenNumberIssued = fetchedEntity.getLastTokenNumberIssued();
         int maxCapacity = fetchedEntity.getMaxCapacity();
 
-        if (bookedTokens >= maxCapacity) {
+        if (totalActiveBookings >= maxCapacity) {
             fetchedEntity.setStatus(QueueStatus.FULL);
             doctorShiftQueueRepository.saveAndFlush(fetchedEntity);
             throw new MaxBookingsReachedException("No more bookings Allowed! Maximum bookings reached!");
         }
 
         // 4. Safely allocate the next token
-        int nextAllocatedToken = fetchedEntity.getBookedTokens() + 1;
-        fetchedEntity.setBookedTokens(nextAllocatedToken);
+        int nextAllocatedToken = lastTokenNumberIssued + 1;
+        totalActiveBookings += 1;
+        fetchedEntity.setTotalActiveBookings(totalActiveBookings);
 
         // 5. Update the queue status if capacity is reached
-        if (fetchedEntity.getBookedTokens().equals(fetchedEntity.getMaxCapacity())) {
+        if (fetchedEntity.getTotalActiveBookings().equals(fetchedEntity.getMaxCapacity())) {
             fetchedEntity.setStatus(QueueStatus.FULL);
         }
 

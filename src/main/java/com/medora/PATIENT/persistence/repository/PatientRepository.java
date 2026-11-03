@@ -20,5 +20,5 @@ public interface PatientRepository extends JpaRepository<PatientJpaEntity, Long>
             Long patientRegistrationNumber, String contactNumber, LocalDate dateOfBirth, String firstName, String lastName
     );
 
-    Optional<PatientJpaEntity> findPatientJpaEntityByPatientRegistrationNumber(Long patientRegistrationNumber);
+    Optional<PatientJpaEntity> findByPatientRegistrationNumber(Long patientRegistrationNumber);
 }

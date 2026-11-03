@@ -1,6 +1,6 @@
 package com.medora.DOCTOR.processing.service.doctor.facade.query.search.impl;
 
-import com.medora.DOCTOR.common.enums.SearchContext;
+import com.medora.DOCTOR.common.enums.DoctorSearchContext;
 import com.medora.DOCTOR.common.mappers.DoctorMapper;
 import com.medora.DOCTOR.persistence.repository.DoctorRepository;
 import com.medora.DOCTOR.processing.models.Doctor;
@@ -53,13 +53,13 @@ public class DoctorRegistrationNumberStrategy implements DoctorSearchStrategy {
     }
 
     @Override
-    public boolean supports(Doctor doctor, SearchContext searchContext) {
+    public boolean supports(Doctor doctor, DoctorSearchContext doctorSearchContext) {
         boolean hasRequiredFields = doctor.getDoctorRegistrationNumber() != null
                 && doctor.getMedicalRegistrationNumber() != null
                 && doctor.getContactInformation() != null
                 && doctor.getContactInformation().getPrimaryMobileNumber() != null
                 && doctor.getContactInformation().getPrimaryEmailAddress() != null;
 
-        return hasRequiredFields || searchContext.equals(SearchContext.SINGLE_FETCH);
+        return hasRequiredFields || doctorSearchContext.equals(DoctorSearchContext.SINGLE_FETCH);
     }
 }

@@ -3,20 +3,22 @@ package com.medora.QUEUE.processing.services.queue.facade.query.impl;
 import com.medora.DOCTOR.common.mappers.DoctorMapper;
 import com.medora.DOCTOR.processing.models.Doctor;
 import com.medora.DOCTOR.processing.service.doctor.DoctorServiceFacade;
+import com.medora.QUEUE.common.enums.DoctorShiftQueueSearchContext;
 import com.medora.QUEUE.common.enums.QueueStatus;
 import com.medora.QUEUE.common.exceptions.NoQueuesAvailableException;
+import com.medora.QUEUE.common.exceptions.NoSuitableStrategyFoundException;
 import com.medora.QUEUE.common.exceptions.QueueNotRegisteredException;
 import com.medora.QUEUE.common.mappers.DoctorShiftQueueMapper;
 import com.medora.QUEUE.persistence.entity.DoctorShiftQueueJpaEntity;
 import com.medora.QUEUE.persistence.repository.DoctorShiftQueueRepository;
 import com.medora.QUEUE.processing.models.DoctorShiftQueue;
 import com.medora.QUEUE.processing.services.queue.facade.query.DoctorShiftQueueQueryService;
+import com.medora.QUEUE.processing.services.queue.facade.query.search.DoctorShiftQueueSearchRegistry;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-
 import java.util.List;
 
 @Service
@@ -27,14 +29,13 @@ public class DoctorShiftQueueQueryServiceImpl implements DoctorShiftQueueQuerySe
 
     private final DoctorMapper doctorMapper;
     private final DoctorServiceFacade doctorServiceFacade;
-    private final DoctorShiftQueueRepository doctorShiftQueueRepository;
-    private final DoctorShiftQueueMapper doctorShiftQueueMapper;
+    private final DoctorShiftQueueSearchRegistry queueSearchRegistry;
 
     @Override
     public DoctorShiftQueue checkAvailability(@NonNull DoctorShiftQueue shiftQueue) {
         DoctorShiftQueue fetchedShiftQueue = this.getShiftQueue(shiftQueue);
 
-        int currentAvailability = fetchedShiftQueue.getMaxCapacity() - fetchedShiftQueue.getBookedTokens();
+        int currentAvailability = fetchedShiftQueue.getMaxCapacity() - fetchedShiftQueue.getTotalActiveBookings();
 
         if (currentAvailability <= 0) {
             fetchedShiftQueue.setStatus(QueueStatus.CLOSED);
@@ -45,7 +46,12 @@ public class DoctorShiftQueueQueryServiceImpl implements DoctorShiftQueueQuerySe
     }
 
     @Override
-    public DoctorShiftQueue getShiftQueue(DoctorShiftQueue shiftQueue) {
+    public DoctorShiftQueue getShiftQueue(@NonNull DoctorShiftQueue shiftQueue) {
+        if (shiftQueue.getId() != null) {
+            return queueSearchRegistry.search(shiftQueue, DoctorShiftQueueSearchContext.SINGLE_QUEUE_ID)
+                    .getFirst()
+                    .orElseThrow(() -> new NoQueuesAvailableException("No Queue found for given parameters!"));
+        }
         Doctor doctor = doctorServiceFacade.getDoctor(
                 Doctor.builder()
                         .doctorRegistrationNumber(shiftQueue.getDoctorRegistrationNumber())
@@ -56,32 +62,10 @@ public class DoctorShiftQueueQueryServiceImpl implements DoctorShiftQueueQuerySe
         shiftQueue.setDoctorId(doctor.getId());
         shiftQueue.setDoctorRegistrationNumber(doctor.getDoctorRegistrationNumber());
 
-        DoctorShiftQueueJpaEntity fetchedShiftQueue = doctorShiftQueueRepository
-                .findByDoctorIdAndShiftDateAndStartTime(
-                        shiftQueue.getDoctorId(),
-                        shiftQueue.getShiftDate(),
-                        shiftQueue.getStartTime()
-                )
-                .orElseThrow(() -> new QueueNotRegisteredException(
-                        "Doctor Shift Queue is not registered for given parameters!",
-                        doctorMapper.toRegistrationNumber(shiftQueue.getDoctorRegistrationNumber()),
-                        shiftQueue.getShiftDate(),
-                        shiftQueue.getStartTime()
-                ));
-
-        return doctorShiftQueueMapper.toModel(fetchedShiftQueue);
-//        return DoctorShiftQueue.builder()
-//                .id(fetchedShiftQueue.getId())
-//                .doctorId(fetchedShiftQueue.getDoctor().getId())
-//                .scheduleId(fetchedShiftQueue.getDoctorSchedule().getId())
-//                .doctorRegistrationNumber(fetchedShiftQueue.getDoctor().getDoctorRegistrationNumber())
-//                .shiftDate(fetchedShiftQueue.getShiftDate())
-//                .startTime(fetchedShiftQueue.getStartTime())
-//                .endTime(fetchedShiftQueue.getEndTime())
-//                .maxCapacity(fetchedShiftQueue.getMaxCapacity())
-//                .bookedTokens(fetchedShiftQueue.getBookedTokens())
-//                .status(fetchedShiftQueue.getStatus())
-//                .build();
+        return queueSearchRegistry
+                .search(shiftQueue, DoctorShiftQueueSearchContext.SINGLE_DOCTOR_SHIFT_TIME_WINDOW)
+                .getFirst()
+                .orElseThrow(() -> new NoQueuesAvailableException("No Queue found for given parameters!"));
     }
 
     @Override
@@ -96,20 +80,8 @@ public class DoctorShiftQueueQueryServiceImpl implements DoctorShiftQueueQuerySe
         shiftQueue.setDoctorId(doctor.getId());
         shiftQueue.setDoctorRegistrationNumber(doctor.getDoctorRegistrationNumber());
 
-        List<DoctorShiftQueueJpaEntity> fetchedShiftQueueJpaEntities = doctorShiftQueueRepository
-                .findByDoctorIdAndShiftDate(
-                        shiftQueue.getDoctorId(),
-                        shiftQueue.getShiftDate()
-                );
-
-        if (fetchedShiftQueueJpaEntities.isEmpty())
-            throw new QueueNotRegisteredException(
-                    "Doctor Shift Queue is not registered for given parameters!",
-                    doctorMapper.toRegistrationNumber(shiftQueue.getDoctorRegistrationNumber()),
-                    shiftQueue.getShiftDate(),
-                    shiftQueue.getStartTime()
-            );
-
-        return fetchedShiftQueueJpaEntities.stream().map(doctorShiftQueueMapper::toModel).toList();
+        return queueSearchRegistry
+                .search(shiftQueue, DoctorShiftQueueSearchContext.MANY_DOCTOR_SHIFT_DATE)
+                .getItems();
     }
 }

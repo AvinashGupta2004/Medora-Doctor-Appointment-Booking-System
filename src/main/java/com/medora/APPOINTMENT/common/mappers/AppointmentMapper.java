@@ -2,9 +2,12 @@ package com.medora.APPOINTMENT.common.mappers;
 
 import com.medora.APPOINTMENT.persistence.entity.AppointmentJpaEntity;
 import com.medora.APPOINTMENT.processing.models.Appointment;
+import com.medora.APPOINTMENT.web.DTOs.REQUEST.AppointmentCreationRequest;
 import com.medora.DOCTOR.persistence.entity.DoctorJpaEntity;
 import com.medora.PATIENT.persistence.entity.PatientJpaEntity;
+import com.medora.PATIENT.processing.models.Patient;
 import com.medora.QUEUE.persistence.entity.DoctorShiftQueueJpaEntity;
+import com.medora.QUEUE.processing.models.DoctorShiftQueue;
 import org.mapstruct.*;
 
 @Mapper(
@@ -12,6 +15,13 @@ import org.mapstruct.*;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
 )
 public interface AppointmentMapper {
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "queueId", source = "queue.id")
+    @Mapping(target = "patientId", source = "patient.id")
+    @Mapping(target = "doctorId", source = "queue.doctorId")
+    Appointment toModel(AppointmentCreationRequest request, DoctorShiftQueue queue, Patient patient);
 
     @Mapping(target = "queueId", source = "queue.id")
     @Mapping(target = "patientId", source = "patient.id")

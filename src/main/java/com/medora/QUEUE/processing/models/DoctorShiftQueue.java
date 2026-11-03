@@ -21,10 +21,15 @@ public class DoctorShiftQueue {
     private LocalDate shiftDate;
     private LocalTime startTime;
     private LocalTime endTime;
-    private Integer maxCapacity;
 
     @Builder.Default
-    private Integer bookedTokens = 0;
+    private Integer maxCapacity = 0;
+
+    @Builder.Default
+    private Integer totalActiveBookings = 0;
+
+    @Builder.Default
+    private Integer lastTokenNumberIssued = 0;
 
     @Builder.Default
     private QueueStatus status = QueueStatus.OPEN;

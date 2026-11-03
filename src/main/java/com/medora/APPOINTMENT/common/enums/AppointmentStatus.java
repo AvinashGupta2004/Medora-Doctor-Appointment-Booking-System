@@ -3,6 +3,12 @@ package com.medora.APPOINTMENT.common.enums;
 import java.util.Set;
 
 public enum AppointmentStatus {
+    PENDING {
+        @Override
+        public Set<AppointmentStatus> nextValidStates() {
+            return Set.of(BOOKED, CANCELLED, NO_SHOW);
+        }
+    },
     BOOKED {
         @Override
         public Set<AppointmentStatus> nextValidStates() {
@@ -12,13 +18,7 @@ public enum AppointmentStatus {
     CHECKED_IN {
         @Override
         public Set<AppointmentStatus> nextValidStates() {
-            return Set.of(IN_CONSULTATION, CANCELLED, NO_SHOW);
-        }
-    },
-    IN_CONSULTATION {
-        @Override
-        public Set<AppointmentStatus> nextValidStates() {
-            return Set.of(COMPLETED);
+            return Set.of(COMPLETED, CANCELLED, NO_SHOW);
         }
     },
     COMPLETED {

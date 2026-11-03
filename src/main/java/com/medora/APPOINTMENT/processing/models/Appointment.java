@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class Appointment {
 
     private Long id;
+    private String appointmentReferenceNumber;
     private Long queueId;
     private Long patientId;
     private Long doctorId;

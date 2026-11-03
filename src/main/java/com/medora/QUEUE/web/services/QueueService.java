@@ -38,7 +38,7 @@ public class QueueService {
                 fetchedShiftQueue.getShiftDate(),
                 fetchedShiftQueue.getStartTime(),
                 fetchedShiftQueue.getEndTime(),
-                fetchedShiftQueue.getMaxCapacity() - fetchedShiftQueue.getBookedTokens(),
+                fetchedShiftQueue.getMaxCapacity() - fetchedShiftQueue.getTotalActiveBookings(),
                 fetchedShiftQueue.getStatus()
         );
     }
@@ -56,7 +56,7 @@ public class QueueService {
                 queue.getShiftDate(),
                 queue.getStartTime(),
                 queue.getEndTime(),
-                queue.getMaxCapacity() - queue.getBookedTokens(),
+                queue.getMaxCapacity() - queue.getTotalActiveBookings(),
                 queue.getStatus()
         )).toList();
     }

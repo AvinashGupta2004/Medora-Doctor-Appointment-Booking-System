@@ -55,12 +55,17 @@ public class DoctorShiftQueueJpaEntity {
     @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
 
+    @Builder.Default
     @Column(name = "max_capacity", nullable = false)
-    private Integer maxCapacity;
+    private Integer maxCapacity = 0;
 
     @Builder.Default
-    @Column(name = "booked_tokens", nullable = false)
-    private Integer bookedTokens = 0;
+    @Column(name = "total_active_bookings", nullable = false)
+    private Integer totalActiveBookings = 0;
+
+    @Builder.Default
+    @Column(name = "last_token_num_issued", nullable = false)
+    private Integer lastTokenNumberIssued = 0;
 
     @Builder.Default
     @Enumerated(EnumType.STRING)

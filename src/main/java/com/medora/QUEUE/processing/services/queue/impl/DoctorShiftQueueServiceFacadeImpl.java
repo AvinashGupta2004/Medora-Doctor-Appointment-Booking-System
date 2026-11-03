@@ -28,6 +28,11 @@ public class DoctorShiftQueueServiceFacadeImpl implements DoctorShiftQueueServic
     }
 
     @Override
+    public DoctorShiftQueue getDoctorShiftQueue(@NonNull DoctorShiftQueue doctorShiftQueue) {
+        return doctorShiftQueueQueryService.getShiftQueue(doctorShiftQueue);
+    }
+
+    @Override
     public DoctorShiftQueue checkAvailability(@NonNull DoctorShiftQueue doctorShiftQueue) {
         return doctorShiftQueueQueryService.checkAvailability(doctorShiftQueue);
     }

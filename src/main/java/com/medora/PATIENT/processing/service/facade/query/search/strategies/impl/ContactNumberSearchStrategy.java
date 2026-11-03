@@ -1,10 +1,11 @@
-package com.medora.PATIENT.processing.service.facade.query.search.impl;
+package com.medora.PATIENT.processing.service.facade.query.search.strategies.impl;
 
+import com.medora.PATIENT.common.enums.PatientSearchContext;
 import com.medora.PATIENT.common.mappers.PatientMapper;
 import com.medora.PATIENT.persistence.entity.PatientJpaEntity;
 import com.medora.PATIENT.persistence.repository.PatientRepository;
 import com.medora.PATIENT.processing.models.Patient;
-import com.medora.PATIENT.processing.service.facade.query.search.PatientSearchStrategy;
+import com.medora.PATIENT.processing.service.facade.query.search.strategies.PatientSearchStrategy;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,5 +25,12 @@ public class ContactNumberSearchStrategy implements PatientSearchStrategy {
                 .findByContactNumber(patient.getContactNumber());
 
         return optionalPatient.map(patientMapper::toModel);
+    }
+
+    @Override
+    public boolean supports(Patient patient, PatientSearchContext context) {
+        boolean hasRequiredFields = patient.getContactNumber() != null;
+
+        return hasRequiredFields && context.equals(PatientSearchContext.SINGLE_CONTACT);
     }
 }

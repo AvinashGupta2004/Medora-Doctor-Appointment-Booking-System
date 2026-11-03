@@ -64,7 +64,8 @@ public class DoctorShiftQueueBatchProcessor implements ItemProcessor<DoctorJpaEn
                             .startTime(scheduleEntity.getShiftStartTime())
                             .endTime(scheduleEntity.getShiftEndTime())
                             .maxCapacity(scheduleEntity.getMaxCapacity() != null ? scheduleEntity.getMaxCapacity() : 50)
-                            .bookedTokens(0)
+                            .totalActiveBookings(0)
+                            .lastTokenNumberIssued(0)
                             .status(QueueStatus.OPEN)
                             .build();
 

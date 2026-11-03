@@ -77,8 +77,8 @@ This approach helps prevent conflicting updates when multiple patients attempt t
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/medora.git
-cd medora
+git clone https://github.com/AvinashGupta2004/Medora-Doctor-Appointment-Booking-System.git
+cd Medora-Doctor-Appointment-Booking-System
 ```
 
 ### 2. Configure the database
@@ -88,7 +88,7 @@ Create a PostgreSQL database and configure your connection in `src/main/resource
 ```yaml
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/medora_db
+    url: jdbc:postgresql://localhost:5432/${DB_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 ```

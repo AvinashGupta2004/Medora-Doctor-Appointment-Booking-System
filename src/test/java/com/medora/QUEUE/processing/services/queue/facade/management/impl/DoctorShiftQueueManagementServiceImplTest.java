@@ -53,14 +53,14 @@ public class DoctorShiftQueueManagementServiceImplTest {
         availableQueue = DoctorShiftQueue.builder()
                 .id(100L)
                 .maxCapacity(10)
-                .bookedTokens(5)
+                .totalActiveBookings(5)
                 .status(QueueStatus.OPEN)
                 .build();
 
         queueEntity = DoctorShiftQueueJpaEntity.builder()
                 .id(100L)
                 .maxCapacity(10)
-                .bookedTokens(5)
+                .totalActiveBookings(5)
                 .status(QueueStatus.OPEN)
                 .build();
     }
@@ -80,7 +80,7 @@ public class DoctorShiftQueueManagementServiceImplTest {
         Integer token = service.allocateToken(requestedQueue);
 
         assertEquals(6, token);
-        assertEquals(6, queueEntity.getBookedTokens());
+        assertEquals(6, queueEntity.getTotalActiveBookings());
         assertEquals(QueueStatus.OPEN, queueEntity.getStatus());
 
         verify(doctorShiftQueueRepository)
@@ -91,7 +91,7 @@ public class DoctorShiftQueueManagementServiceImplTest {
 
     @Test
     void shouldMarkQueueFullWhenLastTokenIsAllocated() {
-        queueEntity.setBookedTokens(9);
+        queueEntity.setTotalActiveBookings(9);
         queueEntity.setMaxCapacity(10);
 
         when(shiftQueueQueryService.checkAvailability(requestedQueue))
@@ -107,7 +107,7 @@ public class DoctorShiftQueueManagementServiceImplTest {
         Integer token = service.allocateToken(requestedQueue);
 
         assertEquals(10, token);
-        assertEquals(10, queueEntity.getBookedTokens());
+        assertEquals(10, queueEntity.getTotalActiveBookings());
         assertEquals(QueueStatus.FULL, queueEntity.getStatus());
 
         verify(doctorShiftQueueRepository).save(queueEntity);
@@ -136,7 +136,7 @@ public class DoctorShiftQueueManagementServiceImplTest {
     @Test
     void shouldRejectBookingWhenCapacityIsAlreadyReached() {
         // Simulate an inconsistent queue: OPEN but at capacity.
-        queueEntity.setBookedTokens(10);
+        queueEntity.setTotalActiveBookings(10);
         queueEntity.setMaxCapacity(10);
 
         when(shiftQueueQueryService.checkAvailability(requestedQueue))

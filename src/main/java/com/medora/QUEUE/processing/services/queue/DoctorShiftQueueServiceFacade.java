@@ -5,6 +5,7 @@ import lombok.NonNull;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.Optional;
 
 @Validated
 public interface DoctorShiftQueueServiceFacade {
@@ -14,4 +15,6 @@ public interface DoctorShiftQueueServiceFacade {
     Integer allocateToken(@NonNull DoctorShiftQueue doctorShiftQueue);
 
     List<DoctorShiftQueue> getAllShiftQueuesForDate(@NonNull DoctorShiftQueue doctorShiftQueue);
+
+    DoctorShiftQueue getDoctorShiftQueue(@NonNull DoctorShiftQueue doctorShiftQueue);
 }

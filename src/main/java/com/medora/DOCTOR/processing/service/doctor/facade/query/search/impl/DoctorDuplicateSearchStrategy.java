@@ -1,6 +1,6 @@
 package com.medora.DOCTOR.processing.service.doctor.facade.query.search.impl;
 
-import com.medora.DOCTOR.common.enums.SearchContext;
+import com.medora.DOCTOR.common.enums.DoctorSearchContext;
 import com.medora.DOCTOR.common.mappers.DoctorMapper;
 import com.medora.DOCTOR.persistence.repository.DoctorRepository;
 import com.medora.DOCTOR.processing.models.Doctor;
@@ -40,12 +40,12 @@ public class DoctorDuplicateSearchStrategy implements DoctorSearchStrategy {
     }
 
     @Override
-    public boolean supports(Doctor doctor, SearchContext searchContext) {
+    public boolean supports(Doctor doctor, DoctorSearchContext doctorSearchContext) {
         boolean hasRequiredFields = doctor.getMedicalRegistrationNumber() != null
                 && doctor.getContactInformation() != null
                 && doctor.getContactInformation().getPrimaryMobileNumber() != null
                 && doctor.getContactInformation().getPrimaryEmailAddress() != null;
 
-        return hasRequiredFields || searchContext.equals(SearchContext.DUPLICATE_CHECK);
+        return hasRequiredFields || doctorSearchContext.equals(DoctorSearchContext.DUPLICATE_CHECK);
     }
 }

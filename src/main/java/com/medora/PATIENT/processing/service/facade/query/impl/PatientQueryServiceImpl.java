@@ -1,11 +1,13 @@
 package com.medora.PATIENT.processing.service.facade.query.impl;
 
+import com.medora.PATIENT.common.enums.PatientSearchContext;
 import com.medora.PATIENT.common.exceptions.PatientNotRegisteredException;
 import com.medora.PATIENT.common.mappers.PatientMapper;
 import com.medora.PATIENT.persistence.repository.PatientRepository;
 import com.medora.PATIENT.processing.models.Patient;
 import com.medora.PATIENT.processing.service.facade.query.PatientQueryService;
-import com.medora.PATIENT.processing.service.facade.query.search.PatientSearchStrategy;
+import com.medora.PATIENT.processing.service.facade.query.search.PatientSearchRegistry;
+import com.medora.PATIENT.processing.service.facade.query.search.strategies.PatientSearchStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,16 +20,36 @@ import java.util.Optional;
 public class PatientQueryServiceImpl implements PatientQueryService {
 
     private final PatientRepository patientRepository;
-    private final PatientSearchStrategy patientSearchStrategy;
+    private final PatientSearchRegistry patientSearchRegistry;
     private final PatientMapper patientMapper;
 
     @Override
     public boolean isPatientRegistered(Patient patient) {
-        return patientSearchStrategy.searchPatient(patient).isPresent();
+        if (patient.getPatientRegistrationNumber() != null) {
+            return patientSearchRegistry
+                    .search(patient, PatientSearchContext.SINGLE_PRN)
+                    .getFirst()
+                    .isPresent();
+        }
+
+        return patientSearchRegistry
+                .search(patient, PatientSearchContext.SINGLE_CONTACT)
+                .getFirst()
+                .isPresent();
     }
 
+    @Override
     public Patient getPatient(Patient patient) {
-        Optional<Patient> optionalPatient = patientSearchStrategy.searchPatient(patient);
+        if (patient.getPatientRegistrationNumber() != null) {
+            return patientSearchRegistry
+                    .search(patient, PatientSearchContext.SINGLE_PRN)
+                    .getFirst()
+                    .orElseThrow(() -> new PatientNotRegisteredException("No patient registered with provided details!"));
+        }
+
+        Optional<Patient> optionalPatient = patientSearchRegistry
+                .search(patient, PatientSearchContext.SINGLE_CONTACT)
+                .getFirst();
         if (optionalPatient.isEmpty())
             throw new PatientNotRegisteredException("No patient registered with provided details!");
 
